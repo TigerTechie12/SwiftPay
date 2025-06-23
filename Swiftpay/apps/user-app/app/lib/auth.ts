@@ -1,4 +1,4 @@
-import { PrismaClient } from "@repo/db/client"
+import db from "@repo/db/client"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from  "bcrypt"
 import {z} from 'zod'
@@ -12,8 +12,7 @@ export const authOptions={
                  placeholder:"982001070928", required:true},
    password:{label:"Password", type:"password", required:true}},
       async authorize(credentials:any):Promise<{id:string; name:string; email?:string} | null>{
-       const prisma = new PrismaClient();
-        const hashedPassword=await bcrypt.hash(credentials.password,10)
+       const hashedPassword=await bcrypt.hash(credentials.password,10)
 const schema=z.object({
     phone:z.string(),
     password:z.string().min(6)
@@ -21,7 +20,7 @@ const schema=z.object({
 const result=schema.safeParse(credentials)
 if(result.success){
   
-    const userExist=await prisma.user.findUnique({where:{number:credentials.phone}})
+    const userExist=await db.user.findUnique({where:{number:credentials.phone}})
 
     if(userExist){
         const isPasswordExist=await bcrypt.compare(credentials.password,userExist.password)
@@ -34,7 +33,7 @@ if(result.success){
     return null;
 }  
 try{
-    const user=await prisma.user.create({
+    const user=await db.user.create({
         data:{
             number:credentials.phone,
             password:hashedPassword,

@@ -30,3 +30,4 @@ async function main(){
     },
   })
 }
+console.log("loaded db url:",process.env.DATABASE_URL)
