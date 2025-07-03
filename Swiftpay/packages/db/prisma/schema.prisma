@@ -32,6 +32,12 @@ model OnRampTransaction{
   userId Int
   user User @relation(fields:[userId], references: [id])
 }
+model Merchant{
+  id Int @id @default(autoincrement())
+  name String
+  username String
+  password String
+}
 enum OnRampStatus{
   Success
   Failure
